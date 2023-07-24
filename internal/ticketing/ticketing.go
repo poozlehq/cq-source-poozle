@@ -19,10 +19,6 @@ import (
 	"golang.org/x/time/rate"
 )
 
-const (
-	defaultURL = "http://localhost:3001/api/v1/ticketing"
-)
-
 type Client struct {
 	opts *ClientOptions
 
