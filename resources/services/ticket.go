@@ -55,7 +55,7 @@ func Ticket() *schema.Table {
 func fetchTicket(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	cl := meta.(*client.Client)
 
-	collectionCursor := "/collections"
+	collectionCursor := fmt.Sprintf("%s/collections", cl.Spec.Url)
 	collectionParams := url.Values{}
 	collectionParams.Set("limit", strconv.FormatInt(cl.Spec.Limit, 10))
 	var collections []ticketing.Collection
@@ -98,7 +98,7 @@ func fetchTicket(ctx context.Context, meta schema.ClientMeta, parent *schema.Res
 		p.Set("since", min.Format(time.RFC3339))
 		p.Set("raw", "true")
 		p.Set("limit", strconv.FormatInt(cl.Spec.Limit, 10))
-		cursor := fmt.Sprintf("/%s/tickets", *collection.Id)
+		cursor := fmt.Sprintf("%s/%s/tickets", cl.Spec.Url, *collection.Id)
 		for {
 			ret, p, err := cl.Services.GetTicket(ctx, cursor, p)
 			if err != nil {

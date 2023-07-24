@@ -53,7 +53,7 @@ func Tag() *schema.Table {
 func fetchTag(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	cl := meta.(*client.Client)
 
-	collectionCursor := "/collections"
+	collectionCursor := fmt.Sprintf("%s/collections", cl.Spec.Url)
 	collectionParams := url.Values{}
 	collectionParams.Set("limit", strconv.FormatInt(cl.Spec.Limit, 10))
 	var collections []ticketing.Collection
@@ -74,7 +74,7 @@ func fetchTag(ctx context.Context, meta schema.ClientMeta, parent *schema.Resour
 		p := url.Values{}
 		p.Set("raw", "true")
 		p.Set("limit", strconv.FormatInt(cl.Spec.Limit, 10))
-		cursor := fmt.Sprintf("/%s/tags", *collection.Id)
+		cursor := fmt.Sprintf("%s/%s/tags", cl.Spec.Url, *collection.Id)
 		for {
 			ret, p, err := cl.Services.GetTag(ctx, cursor, p)
 			cl.Logger().Info().Msg(fmt.Sprintf("params %s", p))

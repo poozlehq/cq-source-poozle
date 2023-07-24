@@ -57,7 +57,7 @@ func fetchCollection(ctx context.Context, meta schema.ClientMeta, parent *schema
 	p := url.Values{}
 	p.Set("raw", "true")
 	p.Set("limit", strconv.FormatInt(cl.Spec.Limit, 10))
-	cursor := "/collections"
+	cursor := fmt.Sprintf("%s/collections", cl.Spec.Url)
 	for {
 		ret, p, err := cl.Services.GetCollection(ctx, cursor, p)
 		cl.Logger().Info().Msg(fmt.Sprintf("params %s", p))

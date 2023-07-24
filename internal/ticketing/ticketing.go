@@ -53,7 +53,7 @@ func New(opts ClientOptions) (*Client, error) {
 	}, nil
 }
 
-func (s *Client) request(ctx context.Context, edge string, params url.Values) (retResp *http.Response, retErr error) {
+func (s *Client) request(ctx context.Context, integrationUrl string, params url.Values) (retResp *http.Response, retErr error) {
 	if params == nil {
 		params = url.Values{}
 	}
@@ -61,7 +61,7 @@ func (s *Client) request(ctx context.Context, edge string, params url.Values) (r
 
 	tries := int64(0)
 
-	log := s.opts.Log.With().Str("edge", edge).Interface("query_params", params).Logger()
+	log := s.opts.Log.With().Str("edge", integrationUrl).Interface("query_params", params).Logger()
 
 	defer func() {
 		if retErr != nil {
@@ -80,7 +80,7 @@ func (s *Client) request(ctx context.Context, edge string, params url.Values) (r
 			log.Debug().Msg("wait complete")
 		}
 
-		r, wait, err := s.retryableRequest(ctx, edge, params)
+		r, wait, err := s.retryableRequest(ctx, integrationUrl, params)
 		if err == nil {
 			return r, nil
 		}
@@ -115,10 +115,10 @@ func (s *Client) request(ctx context.Context, edge string, params url.Values) (r
 	}
 }
 
-func (s *Client) retryableRequest(ctx context.Context, edge string, params url.Values) (*http.Response, *time.Duration, error) {
-	log := s.opts.Log.With().Str("edge", edge).Interface("query_params", params).Logger()
+func (s *Client) retryableRequest(ctx context.Context, integrationUrl string, params url.Values) (*http.Response, *time.Duration, error) {
+	log := s.opts.Log.With().Str("edge", integrationUrl).Interface("query_params", params).Logger()
 
-	u := defaultURL + edge
+	u := integrationUrl
 	if strings.Contains(u, "?") {
 		u += "&" + params.Encode()
 	} else {
@@ -144,7 +144,7 @@ func (s *Client) retryableRequest(ctx context.Context, edge string, params url.V
 
 	resp, err := s.opts.HC.Do(req)
 	if err != nil {
-		return nil, nil, fmt.Errorf("do %s: %w", edge, err)
+		return nil, nil, fmt.Errorf("do %s: %w", integrationUrl, err)
 	}
 
 	var wait *time.Duration
@@ -171,7 +171,7 @@ func (s *Client) retryableRequest(ctx context.Context, edge string, params url.V
 			bodyStr = "headers: " + string(b)
 		}
 
-		return nil, wait, httperror.New(resp.StatusCode, http.MethodGet, edge, resp.Status, bodyStr)
+		return nil, wait, httperror.New(resp.StatusCode, http.MethodGet, integrationUrl, resp.Status, bodyStr)
 	}
 
 	return resp, wait, nil

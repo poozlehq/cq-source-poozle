@@ -8,6 +8,7 @@ type Spec struct {
 	IntegrationAccountId string `json:"integration_account_id"`
 	StartDate            string `json:"start_date"`
 	Uid                  string `json:"uid"`
+	Url                  string `json:"url"`
 
 	Timeout    int64 `json:"timeout_secs,omitempty"`
 	MaxRetries int64 `json:"max_retries,omitempty"`

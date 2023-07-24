@@ -57,7 +57,7 @@ func fetchTeam(ctx context.Context, meta schema.ClientMeta, parent *schema.Resou
 	p := url.Values{}
 	p.Set("raw", "true")
 	p.Set("limit", strconv.FormatInt(cl.Spec.Limit, 10))
-	cursor := "/teams"
+	cursor := fmt.Sprintf("%s/teams", cl.Spec.Url)
 	for {
 		ret, p, err := cl.Services.GetTeam(ctx, cursor, p)
 		cl.Logger().Info().Msg(fmt.Sprintf("params %s", p))

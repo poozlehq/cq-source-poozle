@@ -70,7 +70,7 @@ func fetchComment(ctx context.Context, meta schema.ClientMeta, parent *schema.Re
 	p.Set("raw", "true")
 	p.Set("limit", "5")
 
-	cursor := fmt.Sprintf("/%s/tickets/%s/comments", *ticket.CollectionId, *ticket.Id)
+	cursor := fmt.Sprintf("%s/%s/tickets/%s/comments", cl.Spec.Url, *ticket.CollectionId, *ticket.Id)
 	for {
 		ret, p, err := cl.Services.GetComment(ctx, cursor, p)
 		if err != nil {
