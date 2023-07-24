@@ -17,9 +17,10 @@
 
 .DS_Store
 
-cq-ticketing
+cq-source-ticketing
 
 .cq
 
 dist
 *.log
+config.yml

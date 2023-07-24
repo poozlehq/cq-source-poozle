@@ -1,4 +1,4 @@
-module github.com/poozlehq/cq-ticketing
+module github.com/poozlehq/cq-source-ticketing
 
 go 1.19
 

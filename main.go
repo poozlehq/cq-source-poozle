@@ -5,7 +5,7 @@ import (
 	"log"
 
 	"github.com/cloudquery/plugin-sdk/v4/serve"
-	"github.com/poozlehq/cq-ticketing/resources/plugin"
+	"github.com/poozlehq/cq-source-ticketing/resources/plugin"
 )
 
 const sentryDSN = "https://99f66f1a627f48deb66e49a25d6028a6@o1396617.ingest.sentry.io/6747628"

@@ -13,7 +13,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/poozlehq/cq-ticketing/internal/httperror"
+	"github.com/poozlehq/cq-source-ticketing/internal/httperror"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"golang.org/x/time/rate"

@@ -11,8 +11,8 @@ import (
 	"github.com/apache/arrow/go/v13/arrow"
 	"github.com/cloudquery/plugin-sdk/v4/schema"
 	"github.com/cloudquery/plugin-sdk/v4/transformers"
-	"github.com/poozlehq/cq-ticketing/client"
-	"github.com/poozlehq/cq-ticketing/internal/ticketing"
+	"github.com/poozlehq/cq-source-ticketing/client"
+	"github.com/poozlehq/cq-source-ticketing/internal/ticketing"
 )
 
 func Collection() *schema.Table {
