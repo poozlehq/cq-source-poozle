@@ -63,7 +63,7 @@ func fetchTicket(ctx context.Context, meta schema.ClientMeta, parent *schema.Res
 	for {
 		collectionRet, collectionParams, err := cl.Services.GetCollection(ctx, collectionCursor, collectionParams)
 		if err != nil {
-			return err
+			return fmt.Errorf("tickets collection error: %s", err)
 		}
 
 		collections = append(collections, collectionRet.Data...)

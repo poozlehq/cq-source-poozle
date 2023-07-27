@@ -77,7 +77,7 @@ func fetchUser(ctx context.Context, meta schema.ClientMeta, parent *schema.Resou
 		p.Set("limit", strconv.FormatInt(cl.Spec.Limit, 10))
 		cursor := fmt.Sprintf("%s/%s/users", cl.Spec.Url, *collection.Id)
 		for {
-			ret, p, err := cl.Services.GetUser(ctx, cursor, p)
+			ret, p, err := cl.Services.GetUsers(ctx, cursor, p)
 			cl.Logger().Info().Msg(fmt.Sprintf("params %s", p))
 
 			if err != nil {

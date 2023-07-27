@@ -54,6 +54,7 @@ func (s *Client) request(ctx context.Context, integrationUrl string, params url.
 		params = url.Values{}
 	}
 	// params.Set("limit", strconv.FormatInt(int64(s.opts.PageSize), 10))
+	params.Set("realtime", "true")
 
 	tries := int64(0)
 
@@ -162,6 +163,9 @@ func (s *Client) retryableRequest(ctx context.Context, integrationUrl string, pa
 		if bdy != nil {
 			bodyStr = string(bdy)
 		}
+
+		log.Warn().Str("failed ", bodyStr).Err(err).Msg("Unknown Retry-After received")
+
 		if bodyStr == "" {
 			b, _ := json.Marshal(resp.Header)
 			bodyStr = "headers: " + string(b)
@@ -281,8 +285,8 @@ func (s *Client) GetTeam(ctx context.Context, pageUrl string, params url.Values)
 	return &ret, nextPage, nil
 }
 
-func (s *Client) GetUser(ctx context.Context, pageUrl string, params url.Values) (*UserResponse, url.Values, error) {
-	var ret UserResponse
+func (s *Client) GetUsers(ctx context.Context, pageUrl string, params url.Values) (*UsersResponse, url.Values, error) {
+	var ret UsersResponse
 
 	log.Info().Str("cursor", pageUrl).Msg("This is the pageurl for comment")
 
@@ -301,6 +305,26 @@ func (s *Client) GetUser(ctx context.Context, pageUrl string, params url.Values)
 	nextPage := getNextPage(ret.Meta, params)
 
 	return &ret, nextPage, nil
+}
+
+func (s *Client) GetUser(ctx context.Context, pageUrl string, params url.Values) (*UserResponse, url.Values, error) {
+	var ret UserResponse
+
+	log.Info().Str("cursor", pageUrl).Msg("This is the pageurl for comment")
+
+	resp, err := s.request(ctx, pageUrl, params)
+	if err != nil {
+		return nil, nil, err
+	}
+	defer resp.Body.Close()
+
+	err = json.NewDecoder(resp.Body).Decode(&ret)
+	if err != nil {
+		log.Warn().Err(err).Msg("Error decoding body response")
+		return nil, nil, err
+	}
+
+	return &ret, nil, nil
 }
 
 func getNextPage(meta Meta, params url.Values) url.Values {

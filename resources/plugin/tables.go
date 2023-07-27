@@ -11,6 +11,9 @@ func getTables() []*schema.Table {
 		resources.Collection(),
 		resources.Comment(),
 		resources.Ticket(),
+		resources.User(),
+		resources.Team(),
+		resources.Tag(),
 	}
 
 	if err := transformers.TransformTables(tables); err != nil {

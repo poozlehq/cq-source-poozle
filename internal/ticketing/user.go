@@ -5,8 +5,6 @@ import "time"
 type User struct {
 	Id                   *string                `json:"id,omitempty"`
 	Name                 *string                `json:"name,omitempty"`
-	FirstName            *string                `json:"first_name,omitempty"`
-	LastName             *string                `json:"last_name,omitempty"`
 	Avatar               *string                `json:"avatar,omitempty"`
 	EmailAddress         *string                `json:"email,omitempty"`
 	UpdatedAt            *time.Time             `json:"updated_at,omitempty"`
@@ -17,7 +15,11 @@ type User struct {
 	CqUpdatedAt          *time.Time             `json:"cq_updated_at,omitempty"`
 }
 
-type UserResponse struct {
+type UsersResponse struct {
 	Data []User `json:"data"`
 	Meta Meta   `json:"meta"`
+}
+
+type UserResponse struct {
+	Data User `json:"data"`
 }

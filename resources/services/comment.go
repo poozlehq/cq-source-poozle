@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net/url"
+	"strconv"
 	"time"
 
 	"github.com/apache/arrow/go/v13/arrow"
@@ -68,7 +69,7 @@ func fetchComment(ctx context.Context, meta schema.ClientMeta, parent *schema.Re
 	}
 	p.Set("since", min.Format(time.RFC3339))
 	p.Set("raw", "true")
-	p.Set("limit", "5")
+	p.Set("limit", strconv.FormatInt(cl.Spec.Limit, 10))
 
 	cursor := fmt.Sprintf("%s/%s/tickets/%s/comments", cl.Spec.Url, *ticket.CollectionId, *ticket.Id)
 	for {
