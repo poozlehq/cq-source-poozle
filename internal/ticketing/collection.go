@@ -11,7 +11,7 @@ type Collection struct {
 	UpdatedAt            *string                `json:"updated_at,omitempty"`
 	CreatedAt            *string                `json:"created_at,omitempty"`
 	Raw                  map[string]interface{} `json:"raw,omitempty"`
-	IntegrationAccountId *string                `json:"integrtion_account_id,omitempty"`
+	IntegrationAccountId *string                `json:"integration_account_id,omitempty"`
 	CqCreatedAt          *time.Time             `json:"cq_created_at,omitempty"`
 	CqUpdatedAt          *time.Time             `json:"cq_updated_at,omitempty"`
 }
