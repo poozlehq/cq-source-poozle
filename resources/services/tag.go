@@ -70,7 +70,6 @@ func fetchTag(ctx context.Context, meta schema.ClientMeta, parent *schema.Resour
 		}
 	}
 	for _, collection := range collections {
-		key := fmt.Sprintf("ticketing-tag-%s-%s-%s", cl.Spec.WorkspaceId, cl.Spec.IntegrationAccountId, *collection.Id)
 		p := url.Values{}
 		p.Set("raw", "true")
 		p.Set("limit", strconv.FormatInt(cl.Spec.Limit, 10))
@@ -100,10 +99,7 @@ func fetchTag(ctx context.Context, meta schema.ClientMeta, parent *schema.Resour
 			}
 		}
 
-		if err := cl.Backend.SetKey(ctx, key, time.Now().Format(time.RFC3339)); err != nil {
-			return fmt.Errorf("failed to store state to backend: %w", err)
-		}
 	}
 
-	return cl.Backend.Flush(ctx)
+	return nil
 }

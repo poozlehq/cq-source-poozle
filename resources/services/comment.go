@@ -50,24 +50,9 @@ func fetchComment(ctx context.Context, meta schema.ClientMeta, parent *schema.Re
 	if !ok {
 		return fmt.Errorf("parent.Item is not of type *ticketing.Collection, it is of type %T", parent.Item)
 	}
-	key := fmt.Sprintf("ticketing-comment-%s-%s-%s", cl.Spec.WorkspaceId, cl.Spec.IntegrationAccountId, *ticket.Id)
+
 	p := url.Values{}
 
-	min, _ := time.Parse(time.RFC3339, cl.Spec.StartDate)
-	if cl.Backend != nil {
-		value, err := cl.Backend.GetKey(ctx, key)
-
-		if err != nil {
-			return fmt.Errorf("failed to retrieve state from backend: %w", err)
-		}
-		if value != "" {
-			min, err = time.Parse(time.RFC3339, value)
-			if err != nil {
-				return fmt.Errorf("retrieved invalid state value: %q %w", value, err)
-			}
-		}
-	}
-	p.Set("since", min.Format(time.RFC3339))
 	p.Set("raw", "true")
 	p.Set("limit", strconv.FormatInt(cl.Spec.Limit, 10))
 
@@ -90,9 +75,5 @@ func fetchComment(ctx context.Context, meta schema.ClientMeta, parent *schema.Re
 		}
 	}
 
-	if err := cl.Backend.SetKey(ctx, key, time.Now().Format(time.RFC3339)); err != nil {
-		return fmt.Errorf("failed to store state to backend: %w", err)
-	}
-
-	return cl.Backend.Flush(ctx)
+	return nil
 }

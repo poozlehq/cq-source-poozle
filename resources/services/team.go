@@ -53,7 +53,6 @@ func Team() *schema.Table {
 func fetchTeam(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	cl := meta.(*client.Client)
 
-	key := fmt.Sprintf("ticketing-team-%s-%s", cl.Spec.WorkspaceId, cl.Spec.IntegrationAccountId)
 	p := url.Values{}
 	p.Set("raw", "true")
 	p.Set("limit", strconv.FormatInt(cl.Spec.Limit, 10))
@@ -83,9 +82,5 @@ func fetchTeam(ctx context.Context, meta schema.ClientMeta, parent *schema.Resou
 		}
 	}
 
-	if err := cl.Backend.SetKey(ctx, key, time.Now().Format(time.RFC3339)); err != nil {
-		return fmt.Errorf("failed to store state to backend: %w", err)
-	}
-
-	return cl.Backend.Flush(ctx)
+	return nil
 }

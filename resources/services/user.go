@@ -71,7 +71,6 @@ func fetchUser(ctx context.Context, meta schema.ClientMeta, parent *schema.Resou
 	}
 
 	for _, collection := range collections {
-		key := fmt.Sprintf("ticketing-user-%s-%s-%s", cl.Spec.WorkspaceId, cl.Spec.IntegrationAccountId, *collection.Id)
 		p := url.Values{}
 		p.Set("raw", "true")
 		p.Set("limit", strconv.FormatInt(cl.Spec.Limit, 10))
@@ -101,10 +100,7 @@ func fetchUser(ctx context.Context, meta schema.ClientMeta, parent *schema.Resou
 			}
 		}
 
-		if err := cl.Backend.SetKey(ctx, key, time.Now().Format(time.RFC3339)); err != nil {
-			return fmt.Errorf("failed to store state to backend: %w", err)
-		}
 	}
 
-	return cl.Backend.Flush(ctx)
+	return nil
 }

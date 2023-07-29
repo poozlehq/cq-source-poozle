@@ -164,8 +164,6 @@ func (s *Client) retryableRequest(ctx context.Context, integrationUrl string, pa
 			bodyStr = string(bdy)
 		}
 
-		log.Warn().Str("failed ", bodyStr).Err(err).Msg("Unknown Retry-After received")
-
 		if bodyStr == "" {
 			b, _ := json.Marshal(resp.Header)
 			bodyStr = "headers: " + string(b)

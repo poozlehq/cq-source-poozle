@@ -73,8 +73,6 @@ func fetchTicket(ctx context.Context, meta schema.ClientMeta, parent *schema.Res
 	}
 
 	for _, collection := range collections {
-		fmt.Printf("Collection: %+v\n", collection)
-
 		key := fmt.Sprintf("ticketing-ticket-%s-%s-%s", cl.Spec.WorkspaceId, cl.Spec.IntegrationAccountId, *collection.Id)
 		p := url.Values{}
 
@@ -95,14 +93,15 @@ func fetchTicket(ctx context.Context, meta schema.ClientMeta, parent *schema.Res
 				}
 			}
 		}
-		p.Set("since", min.Format(time.RFC3339))
+		p.Set("created_after", min.Format(time.RFC3339))
 		p.Set("raw", "true")
 		p.Set("limit", strconv.FormatInt(cl.Spec.Limit, 10))
 		cursor := fmt.Sprintf("%s/%s/tickets", cl.Spec.Url, *collection.Id)
 		for {
 			ret, p, err := cl.Services.GetTicket(ctx, cursor, p)
 			if err != nil {
-				return err
+				cl.Logger().Err(err)
+				return cl.Backend.Flush(ctx)
 			}
 			now := time.Now()
 			for i := range ret.Data {

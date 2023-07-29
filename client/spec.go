@@ -30,13 +30,10 @@ func (s *Spec) Validate() error {
 
 func (s *Spec) SetDefaults() {
 	if s.Timeout < 1 {
-		s.Timeout = 10
+		s.Timeout = 60
 	}
 	if s.MaxRetries < 1 {
-		s.MaxRetries = 30
-	}
-	if s.PageSize < 1 {
-		s.PageSize = 10
+		s.MaxRetries = 3
 	}
 	if s.Limit < 1 {
 		s.Limit = 100
