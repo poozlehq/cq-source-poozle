@@ -57,7 +57,8 @@ func fetchCommentUser(ctx context.Context, meta schema.ClientMeta, parent *schem
 	}
 
 	p := url.Values{}
-	cursor := fmt.Sprintf("%s/engine/users/%s", cl.Spec.Url, *comment.CreatedById)
+	p.Set("raw", "true")
+	cursor := fmt.Sprintf("%s/engine/users/%s", cl.Spec.Url, *comment.CreatedBy.Username)
 
 	ret, _, err := cl.Services.GetUser(ctx, cursor, p)
 	if err != nil {
@@ -70,5 +71,5 @@ func fetchCommentUser(ctx context.Context, meta schema.ClientMeta, parent *schem
 
 	res <- ret.Data
 
-	return cl.Backend.Flush(ctx)
+	return nil
 }

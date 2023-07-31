@@ -178,6 +178,8 @@ func (s *Client) retryableRequest(ctx context.Context, integrationUrl string, pa
 func (s *Client) GetCollection(ctx context.Context, pageUrl string, params url.Values) (*CollectionResponse, url.Values, error) {
 	var ret CollectionResponse
 
+	log.Debug().Str("cursor", pageUrl).Msg("This is the pageurl for GetCollection")
+
 	resp, err := s.request(ctx, pageUrl, params)
 	if err != nil {
 		return nil, nil, err
@@ -198,7 +200,7 @@ func (s *Client) GetCollection(ctx context.Context, pageUrl string, params url.V
 func (s *Client) GetTicket(ctx context.Context, pageUrl string, params url.Values) (*TicketResponse, url.Values, error) {
 	var ret TicketResponse
 
-	log.Info().Str("cursor", pageUrl).Msg("This is the pageurl for tickets")
+	log.Debug().Str("cursor", pageUrl).Msg("This is the pageurl for GetTicket")
 
 	resp, err := s.request(ctx, pageUrl, params)
 	if err != nil {
@@ -220,7 +222,7 @@ func (s *Client) GetTicket(ctx context.Context, pageUrl string, params url.Value
 func (s *Client) GetComment(ctx context.Context, pageUrl string, params url.Values) (*CommentResponse, url.Values, error) {
 	var ret CommentResponse
 
-	log.Info().Str("cursor", pageUrl).Msg("This is the pageurl for comment")
+	log.Debug().Str("cursor", pageUrl).Msg("This is the pageurl for GetComment")
 
 	resp, err := s.request(ctx, pageUrl, params)
 	if err != nil {
@@ -242,7 +244,7 @@ func (s *Client) GetComment(ctx context.Context, pageUrl string, params url.Valu
 func (s *Client) GetTag(ctx context.Context, pageUrl string, params url.Values) (*TagResponse, url.Values, error) {
 	var ret TagResponse
 
-	log.Info().Str("cursor", pageUrl).Msg("This is the pageurl for comment")
+	log.Debug().Str("cursor", pageUrl).Msg("This is the pageurl for GetTag")
 
 	resp, err := s.request(ctx, pageUrl, params)
 	if err != nil {
@@ -264,7 +266,7 @@ func (s *Client) GetTag(ctx context.Context, pageUrl string, params url.Values) 
 func (s *Client) GetTeam(ctx context.Context, pageUrl string, params url.Values) (*TeamResponse, url.Values, error) {
 	var ret TeamResponse
 
-	log.Info().Str("cursor", pageUrl).Msg("This is the pageurl for comment")
+	log.Debug().Str("cursor", pageUrl).Msg("This is the pageurl for GetTeam")
 
 	resp, err := s.request(ctx, pageUrl, params)
 	if err != nil {
@@ -286,7 +288,7 @@ func (s *Client) GetTeam(ctx context.Context, pageUrl string, params url.Values)
 func (s *Client) GetUsers(ctx context.Context, pageUrl string, params url.Values) (*UsersResponse, url.Values, error) {
 	var ret UsersResponse
 
-	log.Info().Str("cursor", pageUrl).Msg("This is the pageurl for comment")
+	log.Debug().Str("cursor", pageUrl).Msg("This is the pageurl for GetUsers")
 
 	resp, err := s.request(ctx, pageUrl, params)
 	if err != nil {
@@ -308,7 +310,7 @@ func (s *Client) GetUsers(ctx context.Context, pageUrl string, params url.Values
 func (s *Client) GetUser(ctx context.Context, pageUrl string, params url.Values) (*UserResponse, url.Values, error) {
 	var ret UserResponse
 
-	log.Info().Str("cursor", pageUrl).Msg("This is the pageurl for comment")
+	log.Debug().Str("cursor", pageUrl).Msg("This is the pageurl for GetUser")
 
 	resp, err := s.request(ctx, pageUrl, params)
 	if err != nil {

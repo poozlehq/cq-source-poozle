@@ -40,7 +40,11 @@ func Comment() *schema.Table {
 			},
 		},
 		IsIncremental: true,
+		Relations: []*schema.Table{
+			CommentUser(),
+		},
 	}
+
 }
 
 func fetchComment(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
