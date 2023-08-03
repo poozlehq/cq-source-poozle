@@ -13,7 +13,7 @@ import (
 	"github.com/cloudquery/plugin-sdk/v4/schema"
 	"github.com/cloudquery/plugin-sdk/v4/state"
 	"github.com/poozlehq/cq-source-ticketing/client"
-	"github.com/poozlehq/cq-source-ticketing/internal/ticketing"
+	"github.com/poozlehq/cq-source-ticketing/internal"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 
@@ -26,7 +26,7 @@ type Client struct {
 	tables      schema.Tables
 	scheduler   *scheduler.Scheduler
 	backendConn *grpc.ClientConn
-	services    *ticketing.Client
+	services    *internal.Client
 
 	plugin.UnimplementedDestination
 }
@@ -101,7 +101,7 @@ func Configure(_ context.Context, logger zerolog.Logger, specBytes []byte, opts 
 		return nil, fmt.Errorf("failed to validate spec: %w", err)
 	}
 
-	services, err := ticketing.New(ticketing.ClientOptions{
+	services, err := internal.New(internal.ClientOptions{
 		Log: logger.With().Str("source", "cq-source-ticketing").Logger(),
 		HC: &http.Client{
 			Timeout: time.Duration(config.Timeout) * time.Second,

@@ -40,9 +40,9 @@ func Comment() *schema.Table {
 			},
 		},
 		IsIncremental: true,
-		Relations: []*schema.Table{
-			CommentUser(),
-		},
+		// Relations: []*schema.Table{
+		// 	CommentUser(),
+		// },
 	}
 
 }

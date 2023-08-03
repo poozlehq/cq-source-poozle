@@ -46,9 +46,9 @@ func Ticket() *schema.Table {
 				IncrementalKey: true,
 			},
 		},
-		Relations: []*schema.Table{
-			Comment(),
-		},
+		// Relations: []*schema.Table{
+		// 	Comment(),
+		// },
 	}
 }
 

@@ -1,4 +1,4 @@
-package ticketing
+package internal
 
 import (
 	"bytes"
@@ -14,6 +14,7 @@ import (
 	"time"
 
 	"github.com/poozlehq/cq-source-ticketing/internal/httperror"
+	"github.com/poozlehq/cq-source-ticketing/internal/ticketing"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"golang.org/x/time/rate"
@@ -175,8 +176,8 @@ func (s *Client) retryableRequest(ctx context.Context, integrationUrl string, pa
 	return resp, wait, nil
 }
 
-func (s *Client) GetCollection(ctx context.Context, pageUrl string, params url.Values) (*CollectionResponse, url.Values, error) {
-	var ret CollectionResponse
+func (s *Client) GetCollection(ctx context.Context, pageUrl string, params url.Values) (*ticketing.CollectionResponse, url.Values, error) {
+	var ret ticketing.CollectionResponse
 
 	log.Debug().Str("cursor", pageUrl).Msg("This is the pageurl for GetCollection")
 
@@ -197,8 +198,8 @@ func (s *Client) GetCollection(ctx context.Context, pageUrl string, params url.V
 	return &ret, nextPage, nil
 }
 
-func (s *Client) GetTicket(ctx context.Context, pageUrl string, params url.Values) (*TicketResponse, url.Values, error) {
-	var ret TicketResponse
+func (s *Client) GetTicket(ctx context.Context, pageUrl string, params url.Values) (*ticketing.TicketResponse, url.Values, error) {
+	var ret ticketing.TicketResponse
 
 	log.Debug().Str("cursor", pageUrl).Msg("This is the pageurl for GetTicket")
 
@@ -219,8 +220,8 @@ func (s *Client) GetTicket(ctx context.Context, pageUrl string, params url.Value
 	return &ret, nextPage, nil
 }
 
-func (s *Client) GetComment(ctx context.Context, pageUrl string, params url.Values) (*CommentResponse, url.Values, error) {
-	var ret CommentResponse
+func (s *Client) GetComment(ctx context.Context, pageUrl string, params url.Values) (*ticketing.CommentResponse, url.Values, error) {
+	var ret ticketing.CommentResponse
 
 	log.Debug().Str("cursor", pageUrl).Msg("This is the pageurl for GetComment")
 
@@ -241,8 +242,8 @@ func (s *Client) GetComment(ctx context.Context, pageUrl string, params url.Valu
 	return &ret, nextPage, nil
 }
 
-func (s *Client) GetTag(ctx context.Context, pageUrl string, params url.Values) (*TagResponse, url.Values, error) {
-	var ret TagResponse
+func (s *Client) GetTag(ctx context.Context, pageUrl string, params url.Values) (*ticketing.TagResponse, url.Values, error) {
+	var ret ticketing.TagResponse
 
 	log.Debug().Str("cursor", pageUrl).Msg("This is the pageurl for GetTag")
 
@@ -263,8 +264,8 @@ func (s *Client) GetTag(ctx context.Context, pageUrl string, params url.Values) 
 	return &ret, nextPage, nil
 }
 
-func (s *Client) GetTeam(ctx context.Context, pageUrl string, params url.Values) (*TeamResponse, url.Values, error) {
-	var ret TeamResponse
+func (s *Client) GetTeam(ctx context.Context, pageUrl string, params url.Values) (*ticketing.TeamResponse, url.Values, error) {
+	var ret ticketing.TeamResponse
 
 	log.Debug().Str("cursor", pageUrl).Msg("This is the pageurl for GetTeam")
 
@@ -285,8 +286,8 @@ func (s *Client) GetTeam(ctx context.Context, pageUrl string, params url.Values)
 	return &ret, nextPage, nil
 }
 
-func (s *Client) GetUsers(ctx context.Context, pageUrl string, params url.Values) (*UsersResponse, url.Values, error) {
-	var ret UsersResponse
+func (s *Client) GetUsers(ctx context.Context, pageUrl string, params url.Values) (*ticketing.UsersResponse, url.Values, error) {
+	var ret ticketing.UsersResponse
 
 	log.Debug().Str("cursor", pageUrl).Msg("This is the pageurl for GetUsers")
 
@@ -307,8 +308,8 @@ func (s *Client) GetUsers(ctx context.Context, pageUrl string, params url.Values
 	return &ret, nextPage, nil
 }
 
-func (s *Client) GetUser(ctx context.Context, pageUrl string, params url.Values) (*UserResponse, url.Values, error) {
-	var ret UserResponse
+func (s *Client) GetUser(ctx context.Context, pageUrl string, params url.Values) (*ticketing.UserResponse, url.Values, error) {
+	var ret ticketing.UserResponse
 
 	log.Debug().Str("cursor", pageUrl).Msg("This is the pageurl for GetUser")
 
@@ -327,7 +328,7 @@ func (s *Client) GetUser(ctx context.Context, pageUrl string, params url.Values)
 	return &ret, nil, nil
 }
 
-func getNextPage(meta Meta, params url.Values) url.Values {
+func getNextPage(meta ticketing.Meta, params url.Values) url.Values {
 	if meta.Cursors.Next != "" {
 		params.Set("cursor", meta.Cursors.Next)
 		return params
