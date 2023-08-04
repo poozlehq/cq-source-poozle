@@ -9,11 +9,11 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"regexp"
 	"strconv"
 	"strings"
 	"time"
 
-	jsoniter "github.com/json-iterator/go"
 	"github.com/poozlehq/cq-source-ticketing/internal/httperror"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
@@ -200,7 +200,6 @@ func (s *Client) GetCollection(ctx context.Context, pageUrl string, params url.V
 
 func (s *Client) GetTicket(ctx context.Context, pageUrl string, params url.Values) (*TicketResponse, url.Values, error) {
 	var ret TicketResponse
-	var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
 	log.Debug().Str("cursor", pageUrl).Msg("This is the pageurl for GetTicket")
 
@@ -212,12 +211,9 @@ func (s *Client) GetTicket(ctx context.Context, pageUrl string, params url.Value
 
 	// err = json.NewDecoder(resp.Body).Decode(&ret)
 	bodyBytes, _ := io.ReadAll(resp.Body)
-	// re := regexp.MustCompile(`\\u[0-9a-fA-F]{4}`)
-	// re := regexp.MustCompile(`\\u([0-9a-fA-F]{4})`)
-	// cleanedBody := re.ReplaceAllString(string(bodyBytes), "")
-	// err = json.NewDecoder(strings.NewReader(cleanedBody)).Decode(&ret)
-
-	err = json.Unmarshal(bodyBytes, &ret)
+	re := regexp.MustCompile(`\\u0000`)
+	cleanedBody := re.ReplaceAllString(string(bodyBytes), "")
+	err = json.NewDecoder(strings.NewReader(cleanedBody)).Decode(&ret)
 
 	if err != nil {
 		log.Info().Str("pageUrl", string(pageUrl)).Str("params", fmt.Sprintf("%v", params)).Msg("This is the body")
@@ -232,7 +228,6 @@ func (s *Client) GetTicket(ctx context.Context, pageUrl string, params url.Value
 
 func (s *Client) GetComment(ctx context.Context, pageUrl string, params url.Values) (*CommentResponse, url.Values, error) {
 	var ret CommentResponse
-	var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
 	log.Debug().Str("cursor", pageUrl).Msg("This is the pageurl for GetComment")
 
@@ -244,12 +239,10 @@ func (s *Client) GetComment(ctx context.Context, pageUrl string, params url.Valu
 
 	// err = json.NewDecoder(resp.Body).Decode(&ret)
 	bodyBytes, _ := io.ReadAll(resp.Body)
-	// re := regexp.MustCompile(`\\u[0-9a-fA-F]{4}`)
-	// re := regexp.MustCompile(`\\u([0-9a-fA-F]{4})`)
-	// cleanedBody := re.ReplaceAllString(string(bodyBytes), "")
-	// err = json.NewDecoder(strings.NewReader(cleanedBody)).Decode(&ret)
+	re := regexp.MustCompile(`\\u0000`)
+	cleanedBody := re.ReplaceAllString(string(bodyBytes), "")
+	err = json.NewDecoder(strings.NewReader(cleanedBody)).Decode(&ret)
 
-	err = json.Unmarshal(bodyBytes, &ret)
 	if err != nil {
 		log.Error().Err(err).Msg("Error decoding body response")
 		return nil, nil, err
