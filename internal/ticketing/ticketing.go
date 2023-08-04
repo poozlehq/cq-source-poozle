@@ -9,6 +9,7 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"regexp"
 	"strconv"
 	"strings"
 	"time"
@@ -208,7 +209,11 @@ func (s *Client) GetTicket(ctx context.Context, pageUrl string, params url.Value
 	}
 	defer resp.Body.Close()
 
-	err = json.NewDecoder(resp.Body).Decode(&ret)
+	// err = json.NewDecoder(resp.Body).Decode(&ret)
+	bodyBytes, _ := io.ReadAll(resp.Body)
+	re := regexp.MustCompile(`\\u[0-9a-fA-F]{4}`)
+	cleanedBody := re.ReplaceAllString(string(bodyBytes), "")
+	err = json.NewDecoder(strings.NewReader(cleanedBody)).Decode(&ret)
 	if err != nil {
 		log.Warn().Err(err).Msg("Error decoding body response")
 		return nil, nil, err
@@ -230,7 +235,12 @@ func (s *Client) GetComment(ctx context.Context, pageUrl string, params url.Valu
 	}
 	defer resp.Body.Close()
 
-	err = json.NewDecoder(resp.Body).Decode(&ret)
+	// err = json.NewDecoder(resp.Body).Decode(&ret)
+	bodyBytes, _ := io.ReadAll(resp.Body)
+	re := regexp.MustCompile(`\\u[0-9a-fA-F]{4}`)
+	cleanedBody := re.ReplaceAllString(string(bodyBytes), "")
+	err = json.NewDecoder(strings.NewReader(cleanedBody)).Decode(&ret)
+
 	if err != nil {
 		log.Warn().Err(err).Msg("Error decoding body response")
 		return nil, nil, err

@@ -66,7 +66,19 @@ func fetchTicket(ctx context.Context, meta schema.ClientMeta, parent *schema.Res
 			return fmt.Errorf("tickets collection error: %s", err)
 		}
 
-		collections = append(collections, collectionRet.Data...)
+		values := []string{"tensorflow", "airbyte", "kubernetes"}
+
+		for _, collection := range collectionRet.Data {
+			for _, value := range values {
+				if *collection.Id == value {
+					collections = append(collections, collection)
+					break
+				}
+			}
+		}
+
+		// collections = append(collections, collectionRet.Data...)
+
 		if collectionParams == nil {
 			break
 		}
