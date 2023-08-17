@@ -14,6 +14,7 @@ import (
 	"time"
 
 	"github.com/poozlehq/cq-source-ticketing/internal/httperror"
+	"github.com/poozlehq/cq-source-ticketing/internal/payments"
 	"github.com/poozlehq/cq-source-ticketing/internal/ticketing"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
@@ -328,7 +329,57 @@ func (s *Client) GetUser(ctx context.Context, pageUrl string, params url.Values)
 	return &ret, nil, nil
 }
 
+func (s *Client) GetCharges(ctx context.Context, pageUrl string, params url.Values) (*payments.ChargesResponse, url.Values, error) {
+	var ret payments.ChargesResponse
+
+	log.Debug().Str("cursor", pageUrl).Msg("This is the pageurl for GetCharge")
+
+	resp, err := s.request(ctx, pageUrl, params)
+	if err != nil {
+		return nil, nil, err
+	}
+	defer resp.Body.Close()
+
+	err = json.NewDecoder(resp.Body).Decode(&ret)
+	if err != nil {
+		log.Warn().Err(err).Msg("Error decoding body response")
+		return nil, nil, err
+	}
+
+	nextPage := getPaymentsNextPage(ret.Meta, params)
+	return &ret, nextPage, nil
+}
+
+func (s *Client) GetDisputes(ctx context.Context, pageUrl string, params url.Values) (*payments.DisputesResponse, url.Values, error) {
+	var ret payments.DisputesResponse
+
+	log.Debug().Str("cursor", pageUrl).Msg("This is the pageurl for GetCharge")
+
+	resp, err := s.request(ctx, pageUrl, params)
+	if err != nil {
+		return nil, nil, err
+	}
+	defer resp.Body.Close()
+
+	err = json.NewDecoder(resp.Body).Decode(&ret)
+	if err != nil {
+		log.Warn().Err(err).Msg("Error decoding body response")
+		return nil, nil, err
+	}
+	nextPage := getPaymentsNextPage(ret.Meta, params)
+	return &ret, nextPage, nil
+}
+
 func getNextPage(meta ticketing.Meta, params url.Values) url.Values {
+	if meta.Cursors.Next != "" {
+		params.Set("cursor", meta.Cursors.Next)
+		return params
+	}
+
+	return nil
+}
+
+func getPaymentsNextPage(meta payments.Meta, params url.Values) url.Values {
 	if meta.Cursors.Next != "" {
 		params.Set("cursor", meta.Cursors.Next)
 		return params

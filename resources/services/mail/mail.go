@@ -15,7 +15,7 @@ import (
 	"github.com/poozlehq/cq-source-ticketing/internal/ticketing"
 )
 
-func Ticket() *schema.Table {
+func Mail() *schema.Table {
 	return &schema.Table{
 		Name:          "mail",
 		Resolver:      fetchMail,
