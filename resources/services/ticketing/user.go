@@ -11,15 +11,15 @@ import (
 	"github.com/apache/arrow/go/v13/arrow"
 	"github.com/cloudquery/plugin-sdk/v4/schema"
 	"github.com/cloudquery/plugin-sdk/v4/transformers"
-	"github.com/poozlehq/cq-source-ticketing/client"
-	"github.com/poozlehq/cq-source-ticketing/internal/ticketing"
+	"github.com/poozlehq/cq-source-poozle/client"
+	"github.com/poozlehq/cq-source-poozle/internal/ticketing"
 )
 
-func Tag() *schema.Table {
+func User() *schema.Table {
 	return &schema.Table{
-		Name:          "ticketing_tag",
-		Resolver:      fetchTag,
-		Transform:     transformers.TransformWithStruct(&ticketing.Tag{}),
+		Name:          "ticketing_user",
+		Resolver:      fetchUser,
+		Transform:     transformers.TransformWithStruct(&ticketing.User{}),
 		IsIncremental: true,
 		Columns: []schema.Column{
 			{
@@ -50,7 +50,7 @@ func Tag() *schema.Table {
 	}
 }
 
-func fetchTag(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
+func fetchUser(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	cl := meta.(*client.Client)
 
 	collectionCursor := fmt.Sprintf("%s/collections", cl.Spec.Url)
@@ -69,13 +69,14 @@ func fetchTag(ctx context.Context, meta schema.ClientMeta, parent *schema.Resour
 			break
 		}
 	}
+
 	for _, collection := range collections {
 		p := url.Values{}
 		p.Set("raw", "true")
 		p.Set("limit", strconv.FormatInt(cl.Spec.Limit, 10))
-		cursor := fmt.Sprintf("%s/%s/tags", cl.Spec.Url, *collection.Id)
+		cursor := fmt.Sprintf("%s/%s/users", cl.Spec.Url, *collection.Id)
 		for {
-			ret, p, err := cl.Services.GetTag(ctx, cursor, p)
+			ret, p, err := cl.Services.GetUsers(ctx, cursor, p)
 			cl.Logger().Info().Msg(fmt.Sprintf("params %s", p))
 
 			if err != nil {

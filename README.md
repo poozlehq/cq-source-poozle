@@ -1,15 +1,14 @@
-# CloudQuery ticketing Source Plugin
+# CloudQuery poozle Source Plugin
 
-[![test](https://github.com/poozlehq/cq-source-ticketing/actions/workflows/test.yaml/badge.svg)](https://github.com/poozlehq/cq-source-ticketing/actions/workflows/test.yaml)
-[![Go Report Card](https://goreportcard.com/badge/github.com/poozlehq/cq-source-ticketing)](https://goreportcard.com/report/github.com/poozlehq/cq-source-ticketing)
+[![test](https://github.com/poozlehq/cq-source-poozle/actions/workflows/test.yaml/badge.svg)](https://github.com/poozlehq/cq-source-poozle/actions/workflows/test.yaml)
+[![Go Report Card](https://goreportcard.com/badge/github.com/poozlehq/cq-source-poozle)](https://goreportcard.com/report/github.com/poozlehq/cq-source-poozle)
 
-A ticketing source plugin for CloudQuery that loads data from ticketing to any database, data warehouse or data lake supported by [CloudQuery](https://www.cloudquery.io/), such as PostgreSQL, BigQuery, Athena, and many more.
+A poozle source plugin for CloudQuery that loads data from poozle to any database, data warehouse or data lake supported by [CloudQuery](https://www.cloudquery.io/), such as PostgreSQL, BigQuery, Athena, and many more.
 
 ## Links
 
- - [CloudQuery Quickstart Guide](https://www.cloudquery.io/docs/quickstart)
- - [Supported Tables](docs/tables/README.md)
-
+- [CloudQuery Quickstart Guide](https://www.cloudquery.io/docs/quickstart)
+- [Supported Tables](docs/tables/README.md)
 
 ## Configuration
 
@@ -18,8 +17,8 @@ The following source configuration file will sync to a PostgreSQL database. See 
 ```yaml
 kind: source
 spec:
-  name: "ticketing"
-  path: "poozlehq/ticketing"
+  name: "poozle"
+  path: "poozlehq/poozle"
   version: "${VERSION}"
   destinations:
     - "postgresql"
@@ -50,7 +49,7 @@ make gen-docs
 ### Release a new version
 
 1. Run `git tag v1.0.0` to create a new tag for the release (replace `v1.0.0` with the new version number)
-2. Run `git push origin v1.0.0` to push the tag to GitHub  
+2. Run `git push origin v1.0.0` to push the tag to GitHub
 
 Once the tag is pushed, a new GitHub Actions workflow will be triggered to build the release binaries and create the new release on GitHub.
 To customize the release notes, see the Go releaser [changelog configuration docs](https://goreleaser.com/customization/changelog/#changelog).

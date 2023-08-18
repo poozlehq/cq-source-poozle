@@ -2,7 +2,6 @@ package resources
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"net/url"
 	"strconv"
@@ -11,16 +10,15 @@ import (
 	"github.com/apache/arrow/go/v13/arrow"
 	"github.com/cloudquery/plugin-sdk/v4/schema"
 	"github.com/cloudquery/plugin-sdk/v4/transformers"
-	"github.com/poozlehq/cq-source-ticketing/client"
-	"github.com/poozlehq/cq-source-ticketing/internal/ticketing"
+	"github.com/poozlehq/cq-source-poozle/client"
+	"github.com/poozlehq/cq-source-poozle/internal/ticketing"
 )
 
-func Collection() *schema.Table {
+func Comment() *schema.Table {
 	return &schema.Table{
-		Name:          "ticketing_collection",
-		Resolver:      fetchCollection,
-		Transform:     transformers.TransformWithStruct(&ticketing.Collection{}),
-		IsIncremental: true,
+		Name:      "ticketing_comment",
+		Resolver:  fetchComment,
+		Transform: transformers.TransformWithStruct(&ticketing.Comment{}),
 		Columns: []schema.Column{
 			{
 				Name:       "id",
@@ -35,32 +33,36 @@ func Collection() *schema.Table {
 				PrimaryKey: true,
 			},
 			{
-				Name:           "created_at",
-				Type:           arrow.FixedWidthTypes.Timestamp_us,
-				Resolver:       schema.PathResolver("CreatedAt"),
-				IncrementalKey: true,
-			},
-			{
 				Name:           "updated_at",
 				Type:           arrow.FixedWidthTypes.Timestamp_us,
 				Resolver:       schema.PathResolver("UpdatedAt"),
 				IncrementalKey: true,
 			},
 		},
+		IsIncremental: true,
+		// Relations: []*schema.Table{
+		// 	CommentUser(),
+		// },
 	}
+
 }
 
-func fetchCollection(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
+func fetchComment(ctx context.Context, meta schema.ClientMeta, parent *schema.Resource, res chan<- interface{}) error {
 	cl := meta.(*client.Client)
 
+	ticket, ok := parent.Item.(ticketing.Ticket)
+	if !ok {
+		return fmt.Errorf("parent.Item is not of type *ticketing.Collection, it is of type %T", parent.Item)
+	}
+
 	p := url.Values{}
+
 	p.Set("raw", "true")
 	p.Set("limit", strconv.FormatInt(cl.Spec.Limit, 10))
-	cursor := fmt.Sprintf("%s/collections", cl.Spec.Url)
-	for {
-		ret, p, err := cl.Services.GetCollection(ctx, cursor, p)
-		cl.Logger().Info().Msg(fmt.Sprintf("params %s", p))
 
+	cursor := fmt.Sprintf("%s/%s/tickets/%s/comments", cl.Spec.Url, *ticket.CollectionId, *ticket.Id)
+	for {
+		ret, p, err := cl.Services.GetComment(ctx, cursor, p)
 		if err != nil {
 			return err
 		}
@@ -72,11 +74,6 @@ func fetchCollection(ctx context.Context, meta schema.ClientMeta, parent *schema
 		}
 		res <- ret.Data
 
-		data, err := json.Marshal(ret.Data)
-		if err != nil {
-			cl.Logger().Error().Msg(fmt.Sprintf("Error marshaling data: %v", err))
-		}
-		cl.Logger().Info().Msg(fmt.Sprintf("response %s", data))
 		if p == nil {
 			break
 		}

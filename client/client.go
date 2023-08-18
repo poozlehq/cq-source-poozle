@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/cloudquery/plugin-sdk/v4/state"
-	"github.com/poozlehq/cq-source-ticketing/internal/ticketing"
+	"github.com/poozlehq/cq-source-poozle/internal"
 	"github.com/rs/zerolog"
 )
 
@@ -12,7 +12,7 @@ type Client struct {
 	logger zerolog.Logger
 	Spec   *Spec
 
-	Services *ticketing.Client
+	Services *internal.Client
 	Backend  state.Client
 
 	StartData string
@@ -26,7 +26,7 @@ func (c *Client) Logger() *zerolog.Logger {
 	return &c.logger
 }
 
-func New(logger zerolog.Logger, spec Spec, services *ticketing.Client, bk state.Client) *Client {
+func New(logger zerolog.Logger, spec Spec, services *internal.Client, bk state.Client) *Client {
 	c := &Client{
 		logger:   logger,
 		Services: services,

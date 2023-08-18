@@ -3,17 +3,20 @@ package plugin
 import (
 	"github.com/cloudquery/plugin-sdk/v4/schema"
 	"github.com/cloudquery/plugin-sdk/v4/transformers"
-	resources "github.com/poozlehq/cq-source-ticketing/resources/services"
+	payments "github.com/poozlehq/cq-source-poozle/resources/services/payments"
+	ticketing "github.com/poozlehq/cq-source-poozle/resources/services/ticketing"
 )
 
 func getTables() []*schema.Table {
 	tables := []*schema.Table{
-		resources.Collection(),
-		resources.Comment(),
-		resources.Ticket(),
-		resources.User(),
-		resources.Team(),
-		resources.Tag(),
+		ticketing.Collection(),
+		ticketing.Comment(),
+		ticketing.Ticket(),
+		ticketing.User(),
+		ticketing.Team(),
+		ticketing.Tag(),
+		payments.Charge(),
+		payments.Dispute(),
 	}
 
 	if err := transformers.TransformTables(tables); err != nil {
