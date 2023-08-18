@@ -3,8 +3,8 @@ package plugin
 import (
 	"github.com/cloudquery/plugin-sdk/v4/schema"
 	"github.com/cloudquery/plugin-sdk/v4/transformers"
-	payments "github.com/poozlehq/cq-source-ticketing/resources/services/payments"
-	ticketing "github.com/poozlehq/cq-source-ticketing/resources/services/ticketing"
+	payments "github.com/poozlehq/cq-source-poozle/resources/services/payments"
+	ticketing "github.com/poozlehq/cq-source-poozle/resources/services/ticketing"
 )
 
 func getTables() []*schema.Table {

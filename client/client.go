@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/cloudquery/plugin-sdk/v4/state"
-	"github.com/poozlehq/cq-source-ticketing/internal"
+	"github.com/poozlehq/cq-source-poozle/internal"
 	"github.com/rs/zerolog"
 )
 

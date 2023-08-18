@@ -13,9 +13,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/poozlehq/cq-source-ticketing/internal/httperror"
-	"github.com/poozlehq/cq-source-ticketing/internal/payments"
-	"github.com/poozlehq/cq-source-ticketing/internal/ticketing"
+	"github.com/poozlehq/cq-source-poozle/internal/httperror"
+	"github.com/poozlehq/cq-source-poozle/internal/payments"
+	"github.com/poozlehq/cq-source-poozle/internal/ticketing"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"golang.org/x/time/rate"

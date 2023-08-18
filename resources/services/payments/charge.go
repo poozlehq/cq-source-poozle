@@ -10,8 +10,8 @@ import (
 	"github.com/apache/arrow/go/v13/arrow"
 	"github.com/cloudquery/plugin-sdk/v4/schema"
 	"github.com/cloudquery/plugin-sdk/v4/transformers"
-	"github.com/poozlehq/cq-source-ticketing/client"
-	"github.com/poozlehq/cq-source-ticketing/internal/payments"
+	"github.com/poozlehq/cq-source-poozle/client"
+	"github.com/poozlehq/cq-source-poozle/internal/payments"
 )
 
 func Charge() *schema.Table {

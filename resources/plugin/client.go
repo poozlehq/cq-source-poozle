@@ -12,8 +12,8 @@ import (
 	"github.com/cloudquery/plugin-sdk/v4/scheduler"
 	"github.com/cloudquery/plugin-sdk/v4/schema"
 	"github.com/cloudquery/plugin-sdk/v4/state"
-	"github.com/poozlehq/cq-source-ticketing/client"
-	"github.com/poozlehq/cq-source-ticketing/internal"
+	"github.com/poozlehq/cq-source-poozle/client"
+	"github.com/poozlehq/cq-source-poozle/internal"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 
@@ -102,7 +102,7 @@ func Configure(_ context.Context, logger zerolog.Logger, specBytes []byte, opts 
 	}
 
 	services, err := internal.New(internal.ClientOptions{
-		Log: logger.With().Str("source", "cq-source-ticketing").Logger(),
+		Log: logger.With().Str("source", "cq-source-poozle").Logger(),
 		HC: &http.Client{
 			Timeout: time.Duration(config.Timeout) * time.Second,
 		},
