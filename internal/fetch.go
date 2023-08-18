@@ -51,6 +51,10 @@ func New(opts ClientOptions) (*Client, error) {
 	}, nil
 }
 
+func (e *RateLimitError) Error() string {
+	return fmt.Sprintf("Rate limited. Retry after %v", e.RetryAfter)
+}
+
 func (s *Client) request(ctx context.Context, integrationUrl string, params url.Values) (retResp *http.Response, retErr error) {
 	if params == nil {
 		params = url.Values{}
@@ -86,6 +90,8 @@ func (s *Client) request(ctx context.Context, integrationUrl string, params url.
 
 		temporary := false
 		if errors.Is(err, context.Canceled) || errors.Is(err, context.DeadlineExceeded) {
+			temporary = true
+		} else if _, ok := err.(*RateLimitError); ok {
 			temporary = true
 		} else if he, ok := err.(httperror.Error); ok {
 			temporary = he.Temporary()
@@ -146,14 +152,37 @@ func (s *Client) retryableRequest(ctx context.Context, integrationUrl string, pa
 		return nil, nil, fmt.Errorf("do %s: %w", integrationUrl, err)
 	}
 
+	respCopy := new(http.Response)
+	*respCopy = *resp
+
 	var wait *time.Duration
-	if ra := resp.Header.Get("Retry-After"); ra != "" {
-		rr, err := strconv.ParseFloat(ra, 64)
-		if err != nil {
-			log.Warn().Str("retry_after", ra).Err(err).Msg("Unknown Retry-After received")
+	var response Response
+	bdy, err := io.ReadAll(respCopy.Body)
+	if err != nil {
+		log.Warn().Err(err).Msg("Failed to read response body")
+	}
+
+	resp.Body = io.NopCloser(bytes.NewBuffer(bdy))
+	respCopy.Body = io.NopCloser(bytes.NewBuffer(bdy))
+
+	err = json.Unmarshal(bdy, &response)
+	if err != nil {
+		log.Warn().Err(err).Msg("Failed to parse response body: " + err.Error())
+	} else if response.Error != nil {
+		apiError, ok := response.Error.(*APIRateLimitError)
+		if !ok {
+			log.Warn().Msg("Error is not of type *APIRateLimitError")
 		} else {
-			t := time.Duration(rr) * time.Second
-			wait = &t
+			if apiError.TryAfter != "" {
+				rr, err := strconv.ParseFloat(apiError.TryAfter, 64)
+				if err != nil {
+					log.Warn().Str("tryAfter", apiError.TryAfter).Err(err).Msg("Unknown TryAfter received")
+				} else {
+					t := time.Duration(rr) * time.Second
+					wait = &t
+					return nil, wait, &RateLimitError{RetryAfter: *wait}
+				}
+			}
 		}
 	}
 
